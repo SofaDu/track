@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Авторизация
+{% endblock %}
+
+{% block body %}
+    <h1 style="text-align: center;">
+        Отслеживание заказов</h1>
+    {% if role == 1 %}
+    <form style="width: 100%; align-items: center;" method="POST" action="/add_order">
+        <label style ="padding: 5px;" for="order_number">Введите номер заказа:</label>
+        <input style="width: 450px; margin: 5px;" type="text" id="order_number" name="order_number" required>
+        <button style="border-radius: 5px;" type="submit">Добавить заказ</button>
+    </form>
+    {% endif %}
+    <br>
+    <h2>Список заказов:</h2>
+    <ul>
+        {% for track in tracks %}
+        <div>
+            <li>{{ track.order_number }} ({{ track.date_of_creation }})</li>
+            {% for update in updates %}
+                {% if update.num_track == track.order_number %}
+                    {% if update.status_track != "Формирование" %}
+                        <img src="/static/images/points.png"
+                             alt="points icon" style="height: 30px;">
+                    {% endif %}
+                    <p class="no-margin">{{ update.status_track }} - {{ update.date_update_track }}</p>
+                {% endif %}
+            {% endfor %}
+            {% if role == 2 %}
+            <form method="POST" action="/update_status/{{ track.order_number }}">
+                <label for="status">Изменить статус:</label>
+                <select id="status" name="status">
+                    <option value="Формирование">Формирование</option>
+                    <option value="Направлено на сборку">Направлено на сборку</option>
+                    <option value="Передается в доставку">Передается в доставку</option>
+                    <option value="В пути">В пути</option>
+                    <option value="Доставлено">Доставлено</option>
+                    <option value="На уточнении">На уточнении</option>
+                    <option value="Заказ отменен">Заказ отменен</option>
+                    <option value="Доставка перенесена">Доставка перенесена</option>
+                </select>
+                <button type="submit">Обновить статус</button>
+            </form>
+            {% endif %}
+        </div>
+        <br>
+        {% endfor %}
+    </ul>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }} </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+{% endblock %}
