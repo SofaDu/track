@@ -2,6 +2,7 @@ import datetime
 import os
 from flask import render_template, request, redirect, session, app, Flask, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orders.db'
@@ -80,7 +81,7 @@ def index():
     # orders = Track.query \ .join(Update, Track.order_number == Update.num_track) \ .add_columns(Track.id,
     # Track.order_number, Track.date_of_creation, Update.status_track, Update.date_update_track) \ .order_by(desc(
     # Track.id)).all() orders = Track.query.order_by(desc(Track.id)).all()
-        tracks = Track.query.all()
+        tracks = Track.query.order_by(desc(Track.id)).all()
         updates = Update.query.all()
         users = Users.query.all()
         print(tracks)
@@ -129,7 +130,7 @@ def update_status(id):
                 print(new_update)
             except Exception as e:
                 print(e)
-        flash(f'Статус заказа обновлен. Старый статус: {old_status}, Новый статус: {new_status}', 'success')
+        flash(f'Статус заказа {track.order_number} обновлен. Старый статус: {old_status}, Новый статус: {new_status}', 'success')
     return redirect(url_for('index'))
 
 

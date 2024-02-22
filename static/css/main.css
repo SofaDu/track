@@ -1,3 +1,7 @@
 .color{
     background: red;
 }
+.no-margin{
+    margin: 0px;
+}
+.navbar .nav-link {color: white}

@@ -9,9 +9,9 @@
         Отслеживание заказов</h1>
     {% if role == 1 %}
     <form style="width: 100%; align-items: center;" method="POST" action="/add_order">
-        <label style ="padding: 5px;" for="order_number">Введите номер заказа:</label>
-        <input style="width: 450px; margin: 5px;" type="text" id="order_number" name="order_number" required>
-        <button style="border-radius: 5px;" type="submit">Добавить заказ</button>
+        <label style ="padding: 5px; font-size: 20px;" for="order_number">Введите номер заказа:</label>
+        <input style="width: 70%; margin-left: 5px; margin-right: 5px;" type="text" id="order_number" name="order_number" required>
+        <button style="border-radius: 5px; font-size: 16px; width: 10%;" type="submit">Добавить заказ</button>
     </form>
     {% endif %}
     <br>
@@ -19,17 +19,26 @@
     <ul>
         {% for track in tracks %}
         <div>
-            <li>{{ track.order_number }} ({{ track.date_of_creation }})</li>
+            <div style="margin-right: 20px; display: flex; justify-content: space-between; height: 30px;">
+                <li>{{ track.order_number }}</li>
+                <p>{{ track.date_of_creation }} </p>
+            </div>
             {% for update in updates %}
                 {% if update.num_track == track.order_number %}
                     {% if update.status_track != "Формирование" %}
-                        <img src="/static/images/points.png"
+                        <figure style="align-items: center;" class="no-margin">
+                            <img src="/static/images/points.png"
                              alt="points icon" style="height: 30px;">
+                        </figure>
                     {% endif %}
-                    <p class="no-margin">{{ update.status_track }} - {{ update.date_update_track }}</p>
+            <div style="margin-right: 20px; display: flex; justify-content: space-between; height: 25px;">
+                <p class="no-margin">{{ update.status_track }}</p>
+                <p style="opacity: .4;">{{ update.date_update_track }}</p>
+            </div>
                 {% endif %}
             {% endfor %}
             {% if role == 2 %}
+            <br>
             <form method="POST" action="/update_status/{{ track.order_number }}">
                 <label for="status">Изменить статус:</label>
                 <select id="status" name="status">
